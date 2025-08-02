@@ -20,7 +20,7 @@ function Login() {
   };
   return (
     <div className="p-12 bg-white rounded-lg shadow flex flex-col items-center">
-      <h1 className="font-bold text-xl mb-6">Login to enter the Quiz</h1>
+      <h1 className="font-bold text-2xl mb-6">Login to enter the Quiz</h1>
       <input
         type="email"
         value={email}

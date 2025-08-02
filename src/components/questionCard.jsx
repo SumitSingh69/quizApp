@@ -27,7 +27,7 @@ function QuestionCard({ index, ques, handleAnswerSelect }) {
           <li
             key={i}
             onClick={() => handleSelect(option)}
-            className={`border p-2 rounded cursor-pointer hover:bg-blue-100 ${
+            className={`border p-2 w-1/2 rounded cursor-pointer hover:bg-blue-100 ${
               selected === option ? 'bg-blue-500 text-white' : ''
             }`}
           >

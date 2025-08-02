@@ -3,7 +3,7 @@ import axios from 'axios';
 import QuestionCard from '../components/questionCard';
 import { useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-
+import Result from './result';
 function Questions() {
   const navigate = useNavigate();
   const [ques, setQues] = useState([]);
@@ -12,6 +12,8 @@ function Questions() {
   const [attemptedQuestions, setAttemptedQuestions] = useState(new Set());
   const [showSidebar, setShowSidebar] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 mins in seconds
+  const [answers, setAnswers] = useState(Array(15).fill(null));
+  const [correctAnswers, setCorrectAnswers] = useState(Array(15).fill(null));
 
   // Timer logic
   useEffect(() => {
@@ -58,6 +60,11 @@ function Questions() {
   }, [currentIndex, ques]);
 
   const handleAnswerSelect = (option) => {
+    setAnswers((prev) => {
+      const newAnswers = [...prev];
+      newAnswers[currentIndex] = option;
+      return newAnswers;
+    });
     setAttemptedQuestions((prev) => new Set(prev).add(currentIndex));
   };
 
@@ -65,7 +72,12 @@ function Questions() {
     if (currentIndex < ques.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      navigate('/results');
+      navigate('/results', {
+        state: {
+          answers,
+          ques
+        }
+      });
     }
   };
 
@@ -87,7 +99,7 @@ function Questions() {
       </button>
 
       {/* Main Content */}
-      <div className="flex-1 p-8 pr-0 lg:pr-72">
+      <div className="flex-1 p-12 pr-0 lg:pr-72">
         <QuestionCard
           index={currentIndex}
           handleAnswerSelect={handleAnswerSelect}
@@ -137,15 +149,15 @@ function Sidebar({ ques, currentIndex, setCurrentIndex, viewedQuestions, attempt
       <h2 className="text-lg font-bold mb-4">Questions</h2>
       <div className="grid grid-cols-5 gap-2">
         {ques.map((_, idx) => {
-          let bgColor = 'bg-gray-400';
+          let bgColor = 'bg-gray-300';
           if (attemptedQuestions.has(idx)) bgColor = 'bg-green-600';
-          else if (viewedQuestions.has(idx)) bgColor = 'bg-yellow-400';
+          else if (viewedQuestions.has(idx)) bgColor = 'bg-blue-300';
 
           return (
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
-              className={`w-10 h-10 rounded-full text-white font-bold hover:scale-105 transition ${bgColor} ${
+              className={`w-10 h-10 rounded-md text-white font-bold hover:scale-105 transition ${bgColor} ${
                 currentIndex === idx ? 'ring-2 ring-black' : ''
               }`}
             >
@@ -158,8 +170,7 @@ function Sidebar({ ques, currentIndex, setCurrentIndex, viewedQuestions, attempt
       {/* Legend */}
       <div className="mt-6 text-sm text-gray-600 space-y-2">
         <div><span className="inline-block w-4 h-4 bg-green-600 rounded-full mr-2"></span>Attempted</div>
-        <div><span className="inline-block w-4 h-4 bg-yellow-400 rounded-full mr-2"></span>Viewed</div>
-        <div><span className="inline-block w-4 h-4 bg-gray-400 rounded-full mr-2"></span>Not Visited</div>
+        <div><span className="inline-block w-4 h-4 bg-blue-300 rounded-full mr-2"></span>Viewed</div>
       </div>
     </>
   );

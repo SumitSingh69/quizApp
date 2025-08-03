@@ -86,4 +86,4 @@ npm install
 npm start
 
 🌐 Live Demo
-[https://your-quiz-app-url.vercel.app](https://sumitsingh69.github.io/quizApp/)
+https://sumitsingh69.github.io/quizApp/
